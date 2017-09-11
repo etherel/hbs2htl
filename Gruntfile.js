@@ -13,19 +13,38 @@ module.exports = function(grunt) {
     assemble: {
       options: {
         flatten: true,
-        partials: ['templates/includes/*.hbs'],
-        layoutdir: 'templates/layouts',
-        layout: 'default.hbs'
+        partials: ['templates/components/content/**/*.hbs'],
+        data: 'templates/components/**/*.json',
+        layoutdir: 'templates/components/structure',
+        version: '0.1.0',
+        helpers: ['helpers/*.js'],
       },
       site: {
-        files: {'dest/': ['templates/*.hbs']}
+        files: {'site/': ['templates/components/content/**/*.hbs']},
+        options : {
+            layout: 'page.hbs'
+        }
+      },
+      dist: {
+          files: [ {
+              expand: true,
+              dest: 'dist',
+              src: 'templates/components/content/**/*.hbs'
+          }
+      ],
+
+
+
       }
-    }
-  });
+
+    },
+    clean : ['dist', 'site'],
+});
 
   // Load the Assemble plugin.
   grunt.loadNpmTasks('assemble');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   // The default task to run with the `grunt` command.
-  grunt.registerTask('default', ['assemble']);
+  grunt.registerTask('default', ['clean','assemble']);
 };
